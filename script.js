@@ -35,6 +35,7 @@ const words = [
 ];
 
 let randomWord;
+let lastWord;
 let scoreValue = 0;
 let timeValue = 10;
 let difficulty = "easy";
@@ -42,7 +43,10 @@ let difficulty = "easy";
 let timeInterval = setInterval(updateTime, 1000);
 
 function getRandomWord() {
-    return words[Math.floor(Math.random() * words.length)];
+    const index = Math.floor(Math.random() * (words.length - 1));
+    const newWord = words[index] === lastWord ? words[words.length - 1] : words[index];
+    lastWord = newWord;
+    return newWord;
 }
 
 function addWordToDOM() {
@@ -57,6 +61,18 @@ function updateScore() {
 
 function reloadPage() {
     window.location.reload();
+}
+
+function restartHandle() {
+    clearInterval(timeInterval);
+    scoreReset();
+    difficultyTime();
+    hideEndGameMessages();
+    time.innerText = timeValue + "s";
+    text.value = "";
+    addWordToDOM();
+    text.focus();
+    timeInterval = setInterval(updateTime, 1000);
 }
 
 function updateTime() {
@@ -95,14 +111,7 @@ function hideEndGameMessages() {
 }
 
 restartButton.addEventListener("click" , () => {
-    hideEndGameMessages();
-    scoreReset();
-    difficultyTime();
-    time.innerText = timeValue + "s";
-    text.value = "";
-    addWordToDOM();
-    text.focus();
-    timeInterval = setInterval(updateTime, 1000);
+    restartHandle();
 })
 
 text.addEventListener("input", (e) => {
@@ -124,15 +133,7 @@ text.addEventListener("input", (e) => {
 
 settingsForm.addEventListener("change", (e) => {
     difficulty = e.target.value;
-    clearInterval(timeInterval);
-    scoreReset();
-    difficultyTime();
-    hideEndGameMessages();
-    time.innerText = timeValue + "s";
-    text.value = "";
-    addWordToDOM();
-    text.focus();
-    timeInterval = setInterval(updateTime, 1000);
+    restartHandle();
 })
 
 addWordToDOM();
