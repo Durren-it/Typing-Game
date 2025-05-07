@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="it">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typing Game</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Typing Game</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
 
-<body>
+    <body>
 
-    <button id="settings-btn">
-        <i>⚙️ Impostazioni</i>
-    </button>
+        <button id="settings-btn">
+            <i>⚙️ Impostazioni</i>
+        </button>
 
-    <div id="settings-div">
-        <form id="settings-form">
-            <label for="difficulty">Difficoltà:</label>
-            <select id="difficulty" name="difficulty">
-                <option value="easy">Facile</option>
-                <option value="medium">Medio</option>
-                <option value="hard">Difficile</option>
-            </select>
-        </form>
-    </div>
+        <div id="settings-div">
+            <form id="settings-form">
+                <label for="difficulty">Difficoltà:</label>
+                <select id="difficulty" name="difficulty">
+                    <option value="easy">Facile</option>
+                    <option value="medium">Medio</option>
+                    <option value="hard">Difficile</option>
+                </select>
+            </form>
+        </div>
 
-    <h1>Typing Game</h1>
+        <h1>Typing Game</h1>
 
-    <div class="container">
+        <div class="container">
 
-        <p>Scrivi la seguente parola:</p>
-        <h2 id="word">parola</h2>
-        <input type="text" id="input" placeholder="Inizia a digitare..." autocomplete="off" />
+            <p>Scrivi la seguente parola:</p>
+            <h2 id="word">parola</h2>
+            <input type="text" id="input" placeholder="Inizia a digitare..." autocomplete="off" />
 
-        <p class="time-container">Tempo rimanente: <span id="time">10s</span></p>
-        <p class="score-container">Score: <span id="score">0</span></p>
+            <p class="time-container">Tempo rimanente: <span id="time">10s</span></p>
+            <p class="score-container">Score: <span id="score">0</span></p>
 
-        <p id="end-game-container">Congratulazioni!</p>
-    </div>
+            <p id="end-game-container">Congratulazioni!</p>
+        </div>
 
-    <script src="script.js"></script>
-</body>
+        <script src="script.js"></script>
+    </body>
 
 </html>
