@@ -50,8 +50,23 @@ async function fetchEngPhrases() {
     // TODO: recupero delle frasi da tradurre
 }
 
-async function translatePhrases() {
-    // TODO: ciclo di traduzione delle frasi e creazione array da usare nel gioco
+async function translatePhrases(engPhrases) {
+    const translatedPhrases = [];
+    
+    for (const phrase of engPhrases) {
+        try {
+            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(phrase.content)}&langpair=en|it`);
+            const data = await response.json();
+            
+            if (data.responseStatus === 200) {
+                translatedPhrases.push(data.responseData.translatedText);
+            }
+        } catch (error) {
+            console.error('Errore durante la traduzione:', error);
+        }
+    }
+    
+    return translatedPhrases;
 }
 
 function getRandomPhrase() {
