@@ -39,7 +39,7 @@ let scoreValue = 0;
 let timeValue = 10;
 let difficulty = "easy";
 
-const timeInterval = setInterval(updateTime, 1000);
+let timeInterval = setInterval(updateTime, 1000);
 
 function getRandomWord() {
     return words[Math.floor(Math.random() * words.length)];
@@ -75,20 +75,34 @@ function gameOver() {
 }
 
 function difficultyTime () {
-    if (difficulty.valueOf === "easy") {
+    if (difficulty === "easy") {
         timeValue = 10;
-    } else if (difficulty.valueOf === "medium") {
+    } else if (difficulty === "medium") {
         timeValue = 7;
-    } else if (difficulty.valueOf === "hard") {
+    } else if (difficulty === "hard") {
         timeValue = 5;
     }
 }
 
-restartButton.addEventListener("click" , () => {
+function scoreReset() {
+    scoreValue = 0;
+    score.innerText = scoreValue;
+}
+
+function hideEndGameMessages() {
     endGameMessage.style.visibility = "hidden";
     restartButton.style.visibility = "hidden";
-    scoreValue = 0;
+}
+
+restartButton.addEventListener("click" , () => {
+    hideEndGameMessages();
+    scoreReset();
     difficultyTime();
+    time.innerText = timeValue + "s";
+    text.value = "";
+    addWordToDOM();
+    text.focus();
+    timeInterval = setInterval(updateTime, 1000);
 })
 
 text.addEventListener("input", (e) => {
@@ -108,11 +122,18 @@ text.addEventListener("input", (e) => {
     }
 });
 
-
-
-
-// TODO difficulty settings
-
+settingsForm.addEventListener("change", (e) => {
+    difficulty = e.target.value;
+    clearInterval(timeInterval);
+    scoreReset();
+    difficultyTime();
+    hideEndGameMessages();
+    time.innerText = timeValue + "s";
+    text.value = "";
+    addWordToDOM();
+    text.focus();
+    timeInterval = setInterval(updateTime, 1000);
+})
 
 addWordToDOM();
 text.focus();
