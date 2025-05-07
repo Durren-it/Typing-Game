@@ -86,11 +86,18 @@ async function translatePhrases(engPhrases) {
 }
 
 function getRandomPhrase() {
-    // TODO: implementazione logica scelta frase casuale
+    let index = Math.floor(Math.random() * phrases.length);
+    if (index === lastIndex) {
+        index = (index + 1) % phrases.length;
+    }
+    lastIndex = index;
+    return phrases[index];
 }
 
 function addPhraseToDOM() {
-    // TODO: implementazione logica visualzzazione frase casuale
+    randomWord = getRandomPhrase();
+    word.innerText = randomWord;
+    word.style.visibility = "visible";
 }
 
 function updateScore() {
@@ -103,15 +110,27 @@ function reloadPage() {
 }
 
 async function restartHandle() {
-    await fetchWords();
-    clearInterval(timeInterval);
-    isGameStarted = false;
-    scoreReset();
-    difficultyTime();
-    hideEndGameMessages();
-    time.innerText = timeValue + "s";
-    text.value = "";
-    addWordToDOM();
+    if (difficulty === "phrases") {
+        await fetchEngPhrases();
+        clearInterval(timeInterval);
+        isGameStarted = false;
+        scoreReset();
+        difficultyTime();
+        hideEndGameMessages();
+        time.innerText = timeValue + "s";
+        text.value = "";
+        addPhraseToDOM();
+    } else {
+        await fetchWords();
+        clearInterval(timeInterval);
+        isGameStarted = false;
+        scoreReset();
+        difficultyTime();
+        hideEndGameMessages();
+        time.innerText = timeValue + "s";
+        text.value = "";
+        addWordToDOM();
+    }
     text.focus();
     timeInterval = setInterval(updateTime, 1000);
 }
@@ -171,7 +190,11 @@ text.addEventListener("input", (e) => {
     const insertedText = e.target.value;
     if (insertedText === randomWord) {
         e.target.value = "";
-        addWordToDOM();
+        if (difficulty === "phrases") {
+            addPhraseToDOM();
+        } else {
+            addWordToDOM();
+        }
         updateScore();
         if (difficulty === "hard") {
             timeValue += 2;
@@ -180,7 +203,7 @@ text.addEventListener("input", (e) => {
         } else if (difficulty === "easy") {
             timeValue += 5;
         } else if (difficulty === " phrases") {
-            timeValue += 10;
+            timeValue += 10; // TODO : Fix tempo che non viene aggiunto durante frasi
         }
         updateTime();
     }
@@ -193,8 +216,13 @@ settingsForm.addEventListener("change", async (e) => {
 
 async function initGame() {
     word.style.visibility = "hidden";
-    await fetchWords();
-    addWordToDOM();
+    if (difficulty === "phrases") {
+        await fetchEngPhrases();
+        addPhraseToDOM();
+    } else {
+        await fetchWords();
+        addWordToDOM();
+    }
     text.focus();
 };
 
