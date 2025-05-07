@@ -11,29 +11,7 @@ const endGameMessage = document.getElementById("end-game-container");
 const endGameScore = document.getElementById("end-game-score");
 const restartButton = document.getElementById("restart-button");
 
-const words = [
-    "ciao",
-    "cane",
-    "gatto",
-    "computer",
-    "javascript",
-    "programmazione",
-    "sviluppo",
-    "web",
-    "applicazione",
-    "sito",
-    "internet",
-    "tecnologia",
-    "software",
-    "hardware",
-    "sistema",
-    "rete",
-    "database",
-    "algoritmo",
-    "programmatore",
-    "codice",
-];
-
+let words = [];
 let randomWord;
 let lastWord;
 let scoreValue = 0;
@@ -41,6 +19,16 @@ let timeValue = 10;
 let difficulty = "easy";
 
 let timeInterval = setInterval(updateTime, 1000);
+
+async function fetchWords() {
+    try {
+        const response = await fetch ("https://random-word-api.herokuapp.com/word?number=100&lang=it");
+        words = await response.json();
+    } catch (error) {
+        console.error("Errore nel recupero parole:", error);
+        words = ["errore", "rete", "riprova", "connessione"];
+    }
+}
 
 function getRandomWord() {
     const index = Math.floor(Math.random() * (words.length - 1));
@@ -52,6 +40,7 @@ function getRandomWord() {
 function addWordToDOM() {
     randomWord = getRandomWord();
     word.innerText = randomWord;
+    word.style.visibility = "visible";
 }
 
 function updateScore() {
@@ -63,7 +52,8 @@ function reloadPage() {
     window.location.reload();
 }
 
-function restartHandle() {
+async function restartHandle() {
+    await fetchWords();
     clearInterval(timeInterval);
     scoreReset();
     difficultyTime();
@@ -110,8 +100,8 @@ function hideEndGameMessages() {
     restartButton.style.visibility = "hidden";
 }
 
-restartButton.addEventListener("click" , () => {
-    restartHandle();
+restartButton.addEventListener("click" , async () => {
+    await restartHandle();
 })
 
 text.addEventListener("input", (e) => {
@@ -131,10 +121,16 @@ text.addEventListener("input", (e) => {
     }
 });
 
-settingsForm.addEventListener("change", (e) => {
+settingsForm.addEventListener("change", async (e) => {
     difficulty = e.target.value;
-    restartHandle();
+    await restartHandle();
 })
 
-addWordToDOM();
-text.focus();
+async function initGame() {
+    word.style.visibility = "hidden";
+    await fetchWords();
+    addWordToDOM();
+    text.focus();
+};
+
+initGame();
