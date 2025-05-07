@@ -13,7 +13,7 @@ const restartButton = document.getElementById("restart-button");
 
 let words = [];
 let randomWord;
-let lastWord;
+let lastIndex;
 let scoreValue = 0;
 let timeValue = 10;
 let difficulty = "easy";
@@ -31,10 +31,12 @@ async function fetchWords() {
 }
 
 function getRandomWord() {
-    const index = Math.floor(Math.random() * (words.length - 1));
-    const newWord = words[index] === lastWord ? words[words.length - 1] : words[index];
-    lastWord = newWord;
-    return newWord;
+    let index = Math.floor(Math.random() * (words.length - 1));
+    if (index === lastIndex) {
+        index = (index + 1) % words.length; // Usa il modulo per tornare a 0 se supera la lunghezza
+    }
+    lastIndex = index;
+    return words[index];
 }
 
 function addWordToDOM() {
