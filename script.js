@@ -12,13 +12,14 @@ const endGameScore = document.getElementById("end-game-score");
 const restartButton = document.getElementById("restart-button");
 
 let words = [];
+let phrases = [];
 let randomWord;
 let lastIndex;
 let scoreValue = 0;
 let timeValue = 10;
 let difficulty = "easy";
-
-let timeInterval = setInterval(updateTime, 1000);
+let isGameStarted = false;
+let timeInterval;
 
 async function fetchWords() {
     try {
@@ -45,6 +46,22 @@ function addWordToDOM() {
     word.style.visibility = "visible";
 }
 
+async function fetchEngPhrases() {
+    // TODO: recupero delle frasi da tradurre
+}
+
+async function translatePhrases() {
+    // TODO: ciclo di traduzione delle frasi e creazione array da usare nel gioco
+}
+
+function getRandomPhrase() {
+    // TODO: implementazione logica scelta frase casuale
+}
+
+function addPhraseToDOM() {
+    // TODO: implementazione logica visualzzazione frase casuale
+}
+
 function updateScore() {
     scoreValue++;
     score.innerText = scoreValue;
@@ -57,6 +74,7 @@ function reloadPage() {
 async function restartHandle() {
     await fetchWords();
     clearInterval(timeInterval);
+    isGameStarted = false;
     scoreReset();
     difficultyTime();
     hideEndGameMessages();
@@ -68,6 +86,7 @@ async function restartHandle() {
 }
 
 function updateTime() {
+    if (!isGameStarted) return; // Non aggioriamo il tempo se il gioco non è iniziato
     timeValue--;
     time.innerText = timeValue + "s";
     if (timeValue === 0) {
@@ -77,6 +96,7 @@ function updateTime() {
 }
 
 function gameOver() {
+    clearInterval(timeInterval);
     endGameMessage.style.visibility = "visible";
     restartButton.style.visibility = "visible";
     endGameScore.innerText = scoreValue;
@@ -89,6 +109,8 @@ function difficultyTime () {
         timeValue = 7;
     } else if (difficulty === "hard") {
         timeValue = 5;
+    } else if (difficulty === "phrases") {
+        timeValue = 20;
     }
 }
 
@@ -106,6 +128,14 @@ restartButton.addEventListener("click" , async () => {
     await restartHandle();
 })
 
+text.addEventListener("keydown", (e) => {
+    if (!isGameStarted) {
+        clearInterval(timeInterval);
+        isGameStarted = true;
+        timeInterval = setInterval(updateTime, 1000);
+    }
+})
+
 text.addEventListener("input", (e) => {
     const insertedText = e.target.value;
     if (insertedText === randomWord) {
@@ -116,8 +146,10 @@ text.addEventListener("input", (e) => {
             timeValue += 2;
         } else if (difficulty === "medium") {
             timeValue += 3;
-        } else {
+        } else if (difficulty === "easy") {
             timeValue += 5;
+        } else if (difficulty === " phrases") {
+            timeValue += 10;
         }
         updateTime();
     }
