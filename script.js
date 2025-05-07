@@ -47,7 +47,23 @@ function addWordToDOM() {
 }
 
 async function fetchEngPhrases() {
-    // TODO: recupero delle frasi da tradurre
+    try {
+        const response = await fetch('https://sentence.underthekey.com/language?language=eng&count=10');
+        const engPhrases = await response.json();
+        
+        // Traduciamo le frasi in italiano
+        const translatedPhrases = await translatePhrases(engPhrases);
+        
+        // Se abbiamo almeno una frase tradotta, aggiorniamo l'array phrases
+        if (translatedPhrases.length > 0) {
+            phrases = translatedPhrases;
+        } else {
+            phrases = ["Errore di rete, riprova"];
+        }
+    } catch (error) {
+        console.error('Errore nel recupero delle frasi:', error);
+        phrases = ["Errore di rete, riprova"];
+    }
 }
 
 async function translatePhrases(engPhrases) {
