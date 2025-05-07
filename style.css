@@ -70,6 +70,15 @@ select:focus {
     transform: translateY(-100%);
 }
 
+#end-game-container {
+    visibility: hidden;
+    margin-bottom: 24px;
+}
+
+#restart-button {
+    visibility: hidden;
+}
+
 .container {
     text-align: center;
     width: 500px;

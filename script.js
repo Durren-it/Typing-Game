@@ -7,6 +7,9 @@ const settingsButton = document.getElementById("settings-btn");
 const settingsDiv = document.getElementById("settings-div");
 const settingsForm = document.getElementById("settings-form");
 const difficultySelect = document.getElementById("difficulty");
+const endGameMessage = document.getElementById("end-game-container");
+const endGameScore = document.getElementById("end-game-score");
+const restartButton = document.getElementById("restart-button");
 
 const words = [
     "ciao",
@@ -52,6 +55,10 @@ function updateScore() {
     score.innerText = scoreValue;
 }
 
+function reloadPage() {
+    window.location.reload();
+}
+
 function updateTime() {
     timeValue--;
     time.innerText = timeValue + "s";
@@ -60,6 +67,29 @@ function updateTime() {
         gameOver();
     }
 }
+
+function gameOver() {
+    endGameMessage.style.visibility = "visible";
+    restartButton.style.visibility = "visible";
+    endGameScore.innerText = scoreValue;
+}
+
+function difficultyTime () {
+    if (difficulty.valueOf === "easy") {
+        timeValue = 10;
+    } else if (difficulty.valueOf === "medium") {
+        timeValue = 7;
+    } else if (difficulty.valueOf === "hard") {
+        timeValue = 5;
+    }
+}
+
+restartButton.addEventListener("click" , () => {
+    endGameMessage.style.visibility = "hidden";
+    restartButton.style.visibility = "hidden";
+    scoreValue = 0;
+    difficultyTime();
+})
 
 text.addEventListener("input", (e) => {
     const insertedText = e.target.value;
@@ -77,6 +107,9 @@ text.addEventListener("input", (e) => {
         updateTime();
     }
 });
+
+
+
 
 // TODO difficulty settings
 
